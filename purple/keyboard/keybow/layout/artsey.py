@@ -15,7 +15,7 @@ from purple.layer import Layer
 #
 
 class Layout:
-    name = "ARTSEY (Right)"
+    name = "ARTSEY (Left)"
     auto_mod = []
     layers = [
         Layer(
