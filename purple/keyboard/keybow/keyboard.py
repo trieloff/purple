@@ -16,7 +16,7 @@ class Keyboard:
   def __init__(self, keybow):
     self._keybow = keybow
     self._keys = keybow.keys
-    keys = [
+    self.keys = [
       Key(keybow.keys[0].switch),
       Key(keybow.keys[1].switch),
       Key(keybow.keys[2].switch),
