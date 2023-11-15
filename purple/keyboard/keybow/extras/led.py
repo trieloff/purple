@@ -20,6 +20,15 @@ class LED:
         Keycode.LEFT_GUI: (255, 0, 255),
         Keycode.RIGHT_GUI: (255, 0, 255),
     }
+    _LAYER_KEYS = {
+        "Numbers": [13],
+        "Brackets": [1],
+        "Symbols": [0],
+        "Extras": [12],
+        "Navigation": [0, 5, 8],
+        "Mouse": [1, 4, 9],
+        "Base": []
+    }
 
     def __init__(self, keybow):
         # Set up Keybow
@@ -49,5 +58,41 @@ class LED:
                 color = LED._LOCK_FADE_NO_COLOR
 
         for key in self._keys:
-            # set the color
-            key.rgb = tuple(lock_mult*i for i in color)
+            c = tuple(lock_mult*i for i in color)
+            # control is: 0, 13
+            # gui is: 4, 13
+            # alt is: 8, 13
+            # shift is: 0, 5, 9, 13
+            if (
+                (Keycode.LEFT_CONTROL in status.one_shot_key_buffer or Keycode.RIGHT_CONTROL in status.one_shot_key_buffer) and 
+                (key.number == 0 or key.number == 13)
+            ):
+                key.set_led(c[0], c[1], c[2])
+                key.led_on()
+                continue
+            if (
+                (Keycode.LEFT_ALT in status.one_shot_key_buffer or Keycode.LEFT_ALT in status.one_shot_key_buffer) and 
+                (key.number == 8 or key.number == 13)
+            ):
+                key.set_led(c[0], c[1], c[2])
+                key.led_on()
+                continue
+            if (
+                (Keycode.LEFT_GUI in status.one_shot_key_buffer or Keycode.RIGHT_GUI in status.one_shot_key_buffer) and 
+                (key.number == 4 or key.number == 13)
+            ):
+                key.set_led(c[0], c[1], c[2])
+                key.led_on()
+                continue
+            if (
+                (Keycode.LEFT_SHIFT in status.one_shot_key_buffer or Keycode.RIGHT_SHIFT in status.one_shot_key_buffer) and 
+                (key.number == 0 or key.number == 5 or key.number == 9 or key.number == 13)
+            ):
+                key.set_led(c[0], c[1], c[2])
+                key.led_on()
+                continue
+            if (LED._LAYER_KEYS[status.layer.name] and key.number in LED._LAYER_KEYS[status.layer.name]):
+                key.set_led(c[0], c[1], c[2])
+                key.led_on()
+                continue
+            key.led_off()
